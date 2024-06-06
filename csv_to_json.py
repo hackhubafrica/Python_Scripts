@@ -2,30 +2,28 @@ import csv
 import json
 
 # Path to the CSV file
-csv_file = 'wappalyzer_freelancer-htb.csv'
+csv_file = 'checks.csv'
 
-# Initialize an empty dictionary to store the information
-info_dict = {}
+# Initialize an empty list to store the rows as dictionaries
+data_list = []
 
-# Read data from CSV file and populate the dictionary
+# Read data from CSV file and populate the list
 with open(csv_file, 'r', newline='', encoding='utf-8') as csvfile:
-    csvreader = csv.reader(csvfile)
-    headers = next(csvreader)  # Read the headers
-    values = next(csvreader)   # Read the values
+    csvreader = csv.DictReader(csvfile)
     
-    # Populate the dictionary with headers and values
-    for idx, header in enumerate(headers):
-        info_dict[header.strip()] = values[idx].strip()
+    # Read each row and convert it to a dictionary
+    for row in csvreader:
+        data_list.append({key.strip(): value.strip() for key, value in row.items()})
 
-# Convert dictionary to JSON format
-json_data = json.dumps(info_dict, indent=2)
+# Convert list of dictionaries to JSON format
+json_data = json.dumps(data_list, indent=2)
 
 # Print the JSON data
-#print(json_data)
+print(json_data)
 
 # Save to a JSON file
 output_file = 'output.json'
 with open(output_file, 'w', encoding='utf-8') as jsonfile:
-    json.dump(info_dict, jsonfile, indent=2)
+    json.dump(data_list, jsonfile, indent=2)
 
 print(f"JSON data saved to {output_file}")
